@@ -11,8 +11,10 @@ import {
 
 const App = () => {
   let [inputValue, setinputValue] = useState("");
+  let [updateInputValue, setUpdateInputValue] = useState("");
   let [emptyInput, setemptyInput] = useState("");
   let [allTask, setallTask] = useState([]);
+  let [editModal, setEditModal] = useState(false);
   const db = getDatabase();
   let inputText = (e) => {
     setinputValue(e.target.value);
@@ -46,6 +48,15 @@ const App = () => {
   // delete data
   let handleRemove = (id) => {
     remove(ref(db, "TodoList/" + id));
+  };
+
+  let handleEditModal = (id) => {
+    console.log(id)
+    setEditModal(true);
+  };
+
+  let handleUpdate = (id) => {
+    console.log(id)
   };
   return (
     <div className="container">
@@ -82,15 +93,47 @@ const App = () => {
                     <span>{index + 1}. </span>
                     {item.name}
                   </div>
-                  <button
-                    onClick={() => handleRemove(item.id)}
-                    className="bg-red-500 px-3 py-2 rounded text-white font-semibold"
-                  >
-                    Remove
-                  </button>
+                  <div>
+                    <button
+                      onClick={() => handleRemove(item.id)}
+                      className="bg-red-500 px-3 py-2 rounded text-white font-semibold"
+                    >
+                      Remove
+                    </button>
+                    <button
+                      onClick={() => handleEditModal(item.id)}
+                      className="bg-green-500 px-3 py-2 ml-3 rounded text-white font-semibold"
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
+            {editModal && (
+              <div className="bg-white shadow-md shadow-red-300 rounded-lg p-6 w-[500px] h-[300px]">
+                <input
+                  onChange={() => setUpdateInputValue(e.target.value)}
+                  className="w-full mr-3 rounded p-2 bg-gray-100 focus:outline-none"
+                  type="text"
+                  placeholder="Write Text"
+                />
+                <div className="text-left">
+                  <button
+                    onClick={handleUpdate}
+                    className="bg-blue-600 px-3 py-2 rounded text-white font-semibold mt-3 mr-2 "
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => setEditModal(false)}
+                    className="bg-blue-600 px-3 py-2 rounded text-white font-semibold mt-3"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
