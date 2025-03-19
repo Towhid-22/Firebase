@@ -7,6 +7,7 @@ import {
   set,
   onValue,
   remove,
+  update,
 } from "firebase/database";
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
   let [emptyInput, setemptyInput] = useState("");
   let [allTask, setallTask] = useState([]);
   let [editModal, setEditModal] = useState(false);
+  let [id, setId] = useState(null);
   const db = getDatabase();
   let inputText = (e) => {
     setinputValue(e.target.value);
@@ -51,12 +53,15 @@ const App = () => {
   };
 
   let handleEditModal = (id) => {
-    console.log(id)
+    setId(id);
     setEditModal(true);
   };
 
-  let handleUpdate = (id) => {
-    console.log(id)
+  let handleUpdate = () => {
+    update(ref(db, "TodoList/" + id), {
+      name: updateInputValue,
+    });
+    setEditModal(false);
   };
   return (
     <div className="container">
@@ -113,10 +118,10 @@ const App = () => {
             {editModal && (
               <div className="bg-white shadow-md shadow-red-300 rounded-lg p-6 w-[500px] h-[300px]">
                 <input
-                  onChange={() => setUpdateInputValue(e.target.value)}
+                  onChange={(e) => setUpdateInputValue(e.target.value)}
                   className="w-full mr-3 rounded p-2 bg-gray-100 focus:outline-none"
                   type="text"
-                  placeholder="Write Text"
+                  placeholder="Update task"
                 />
                 <div className="text-left">
                   <button
